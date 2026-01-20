@@ -7,17 +7,20 @@ namespace App\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Repository\UserRepository;
+use App\Service\ActivityLogger;
 use App\Service\JwtService;
 
 final class AuthController
 {
     private UserRepository $userRepo;
     private JwtService $jwt;
+    private ActivityLogger $logger;
 
     public function __construct()
     {
         $this->userRepo = new UserRepository();
         $this->jwt = new JwtService();
+        $this->logger = new ActivityLogger();
     }
 
     public function login(Request $request): Response
@@ -37,6 +40,8 @@ final class AuthController
         }
 
         $token = $this->jwt->generate((int)$user['id'], $user['role']);
+        
+        $this->logger->logLogin((int)$user['id']);
 
         return Response::success([
             'token' => $token,
@@ -71,6 +76,8 @@ final class AuthController
         $id = $this->userRepo->create($name, $email, $hash);
 
         $token = $this->jwt->generate($id, 'user');
+        
+        $this->logger->logRegister($id);
 
         return Response::success([
             'message' => 'User registered successfully',
