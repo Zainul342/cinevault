@@ -6,14 +6,18 @@ namespace App\Middleware;
 
 use App\Core\Request;
 use App\Core\Response;
+use App\Service\JwtService;
 use Closure;
 
-/**
- * Auth middleware - stub implementation
- * Full JWT validation akan diimplementasi di Phase 2
- */
 final class AuthMiddleware implements MiddlewareInterface
 {
+    private JwtService $jwt;
+
+    public function __construct()
+    {
+        $this->jwt = new JwtService();
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
         $token = $request->bearerToken();
@@ -22,13 +26,15 @@ final class AuthMiddleware implements MiddlewareInterface
             return Response::unauthorized('Missing authentication token');
         }
         
-        // TODO Phase 2: Validate JWT token dengan JwtService
-        // Untuk sekarang, cek apakah token ada saja
+        $payload = $this->jwt->validate($token);
         
-        // Placeholder - set user data di request attributes
-        // Nanti akan diganti dengan decoded JWT payload
-        $request->setAttribute('user_id', null);
-        $request->setAttribute('user_role', 'guest');
+        if ($payload === null) {
+            return Response::unauthorized('Invalid or expired token');
+        }
+        
+        // Set attributes from token payload
+        $request->setAttribute('user_id', $payload->sub);
+        $request->setAttribute('user_role', $payload->role);
         
         return $next($request);
     }

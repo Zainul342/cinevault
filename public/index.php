@@ -6,6 +6,9 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use App\Core\App;
 use App\Core\Request;
+use App\Controller\AuthController;
+use App\Middleware\AuthMiddleware;
+
 
 // Bootstrap application
 $app = App::getInstance();
@@ -26,6 +29,11 @@ $app->router->get('/api/health', function (Request $req) {
         'environment' => $_ENV['APP_ENV'] ?? 'production',
     ];
 });
+
+// Auth Routes
+$app->router->post('/api/auth/register', [new AuthController(), 'register']);
+$app->router->post('/api/auth/login', [new AuthController(), 'login']);
+$app->router->get('/api/auth/me', [new AuthController(), 'me'], [AuthMiddleware::class]);
 
 // Dispatch - let the router handle the request
 $app->run();
