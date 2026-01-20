@@ -1,0 +1,115 @@
+/* CineVault Design System - Retro Aesthetic */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Color Palette */
+    --primary: #F9C62C;      /* Yellow accent, borders */
+    --accent: #00E3B5;       /* Teal/cyan highlights */
+    --accent-light: #80EED3; /* Mint buttons, hover */
+    --accent-dark: #00BFA5;
+    --bg-cream: #F4EBA7;     /* Content backgrounds */
+    --bg-blue: #5FDBFD;      /* Light blue accents */
+    --bg-dark: #131313;      /* Sidebar, dark areas */
+    --bg-card: #FFFFFF;      /* Card backgrounds */
+    
+    --text-main: #131313;
+    --text-light: #FFFFFF;
+    --text-muted: #666666;
+
+    /* Borders & Shadows */
+    --border-width: 3px;
+    --border-color: #131313;
+    --shadow-hard: 4px 4px 0px #131313;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+
+    /* Typography */
+    --font-heading: 'Press Start 2P', cursive;
+    --font-body: 'Inter', sans-serif;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+}
+
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-cream);
+    color: var(--text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--text-main);
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Utilities */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+.grid { display: grid; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.hidden { display: none; }
+
+/* Retro Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border: 2px solid var(--bg-dark);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Helper Classes */
+.bg-dark { background-color: var(--bg-dark); color: var(--text-light); }
+.bg-cream { background-color: var(--bg-cream); }
+.text-primary { color: var(--primary); }
+.text-accent { color: var(--accent); }
