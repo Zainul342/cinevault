@@ -8,6 +8,7 @@ use App\Core\App;
 use App\Core\Request;
 use App\Controller\AuthController;
 use App\Controller\MovieController;
+use App\Controller\TmdbController;
 use App\Middleware\AuthMiddleware;
 
 
@@ -39,6 +40,12 @@ $app->router->get('/api/auth/me', [new AuthController(), 'me'], [AuthMiddleware:
 // Movie Routes
 $app->router->get('/api/movies', [new MovieController(), 'index']);
 $app->router->get('/api/movies/{id}', [new MovieController(), 'show']);
+
+// TMDB Proxy Routes (Auth required)
+$app->router->get('/api/tmdb/search', [new TmdbController(), 'search'], [AuthMiddleware::class]);
+$app->router->get('/api/tmdb/trending', [new TmdbController(), 'trending'], [AuthMiddleware::class]);
+$app->router->post('/api/movies/sync', [new TmdbController(), 'sync'], [AuthMiddleware::class]);
+
 
 
 // Dispatch - let the router handle the request
