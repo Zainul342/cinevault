@@ -7,6 +7,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use App\Core\App;
 use App\Core\Request;
 use App\Controller\AuthController;
+use App\Controller\MovieController;
 use App\Middleware\AuthMiddleware;
 
 
@@ -34,6 +35,11 @@ $app->router->get('/api/health', function (Request $req) {
 $app->router->post('/api/auth/register', [new AuthController(), 'register']);
 $app->router->post('/api/auth/login', [new AuthController(), 'login']);
 $app->router->get('/api/auth/me', [new AuthController(), 'me'], [AuthMiddleware::class]);
+
+// Movie Routes
+$app->router->get('/api/movies', [new MovieController(), 'index']);
+$app->router->get('/api/movies/{id}', [new MovieController(), 'show']);
+
 
 // Dispatch - let the router handle the request
 $app->run();
