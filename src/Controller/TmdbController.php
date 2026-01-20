@@ -92,6 +92,95 @@ final class TmdbController
         }
     }
 
+    /**
+     * Get movie details from TMDB (proxy endpoint)
+     */
+    public function details(Request $request): Response
+    {
+        $tmdbId = (int) $request->param('id');
+        
+        if (!$tmdbId) {
+            return Response::validation(['id' => 'TMDB ID required']);
+        }
+
+        try {
+            $details = $this->tmdb->getMovieDetails($tmdbId);
+            if (!$details) {
+                return Response::notFound('Movie not found on TMDB');
+            }
+            return Response::success(['data' => $details]);
+        } catch (\Throwable $e) {
+            return Response::error('TMDB_ERROR', $e->getMessage(), 502);
+        }
+    }
+
+    /**
+     * Sync multiple movies from TMDB at once
+     */
+    public function syncBatch(Request $request): Response
+    {
+        $tmdbIds = $request->input('tmdb_ids');
+        
+        if (!is_array($tmdbIds) || empty($tmdbIds)) {
+            return Response::validation(['tmdb_ids' => 'Array of TMDB IDs required']);
+        }
+
+        // Limit batch size for performance
+        $tmdbIds = array_slice($tmdbIds, 0, 20);
+        
+        $synced = [];
+        $skipped = [];
+        $failed = [];
+
+        foreach ($tmdbIds as $tmdbId) {
+            $tmdbId = (int) $tmdbId;
+            if ($tmdbId <= 0) continue;
+
+            // Already exists?
+            $existing = $this->movieRepo->findByTmdbId($tmdbId);
+            if ($existing) {
+                $skipped[] = ['tmdb_id' => $tmdbId, 'id' => $existing->id];
+                continue;
+            }
+
+            try {
+                $details = $this->tmdb->getMovieDetails($tmdbId);
+                if (!$details) {
+                    $failed[] = ['tmdb_id' => $tmdbId, 'reason' => 'Not found on TMDB'];
+                    continue;
+                }
+
+                $movie = new Movie(
+                    id: null,
+                    tmdbId: $details['id'],
+                    title: $details['title'],
+                    slug: $this->slugify($details['title'] . '-' . ($details['release_date'] ?? $tmdbId)),
+                    overview: $details['overview'] ?? null,
+                    posterPath: $details['poster_path'] ?? null,
+                    backdropPath: $details['backdrop_path'] ?? null,
+                    releaseDate: $details['release_date'] ?? null,
+                    voteAverage: (float)($details['vote_average'] ?? 0)
+                );
+
+                $id = $this->movieRepo->save($movie);
+                $synced[] = ['tmdb_id' => $tmdbId, 'id' => $id, 'title' => $details['title']];
+            } catch (\Throwable $e) {
+                $failed[] = ['tmdb_id' => $tmdbId, 'reason' => $e->getMessage()];
+            }
+        }
+
+        return Response::success([
+            'synced' => $synced,
+            'skipped' => $skipped,
+            'failed' => $failed,
+            'summary' => [
+                'synced_count' => count($synced),
+                'skipped_count' => count($skipped),
+                'failed_count' => count($failed),
+            ]
+        ]);
+    }
+
     private function slugify(string $text): string
     {
         $text = strtolower(trim($text));

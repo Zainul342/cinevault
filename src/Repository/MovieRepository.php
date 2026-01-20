@@ -101,4 +101,23 @@ final class MovieRepository
             ]
         );
     }
+
+    public function delete(int $id): bool
+    {
+        $result = $this->db->query('DELETE FROM movies WHERE id = :id', ['id' => $id]);
+        return $result > 0;
+    }
+
+    /**
+     * Search movies by title
+     * @return Movie[]
+     */
+    public function search(string $query, int $limit = 20): array
+    {
+        $rows = $this->db->fetchAll(
+            "SELECT * FROM movies WHERE title LIKE :query ORDER BY vote_average DESC LIMIT " . (int)$limit,
+            ['query' => "%{$query}%"]
+        );
+        return array_map(fn($row) => Movie::fromArray($row), $rows);
+    }
 }
