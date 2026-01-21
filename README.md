@@ -5,95 +5,77 @@
 / /___ / / / / /  __/  | |/ / /_/ / /_/ / / /_  
 \____//_/_/ /_/\___/   |___/\__,_/\__,_/_/\__/  
 
-[ v1.0.0 - PRODUCTION BUILD ]
+[ v1.0.0 - PRODUCTION ]
 ```
 
 # SYSTEM ARCHITECTURE
 
-CineVault is a high-performance, framework-agnostic MVC application engineered for movie data aggregation and user library management. Built on bare-metal PHP 8.3 principles without the overhead of heavy-duty frameworks.
+just pure php muscle, no bulky frameworks slowing things down. we built this beast to handle movie metadata aggregation and user libraries without the overhead.
 
-## > TECHNICAL SPECIFICATIONS
+## > TECH SPECS
 
-### [ BACKEND KERNEL ]
-- **Runtime**: PHP 8.3 (Strict Types)
-- **Architecture**: Custom MVC (Model-View-Controller) implementation
-- **Database**: MySQL 8.0 via PDO (Strict Error Mode)
-- **External API**: TMDB (The Movie Database) Integration v3
-- **Network**: GuzzleHttp for synchronous/asynchronous data transport
+### [ THE KERNEL ]
+running on **php 8.3** with strict typing cause we catch bugs at compile time.
+custom mvc architecture. we wrote the router, the di container, everything.
+**mysql 8.0** storage via pdo. transactions enabled.
+**guzzle** handles the network traffic to tmdb api v3.
 
-### [ FRONTEND INTERFACE ]
-- **Language**: ECMAScript 2023 (Vanilla JS)
-- **State Management**: Local Proxy Store
-- **Styling**: Native CSS3 (CSS Variables, Flexbox/Grid)
-- **DOM Manipulation**: Direct native selection, no Virtual DOM overhead
+### [ THE VIEW ]
+**vanilla js** all the way. no react, no vue, no problem.
+state management via local proxy stores.
+native dom manipulation. fast. responsive.
 
-## > INSTALLATION PROTOCOL
+## > SETUP PROTOCOL
 
-### 1. CLONE REPOSITORY
+### 1. CLONE
+get the code on your machine.
 ```bash
 git clone https://github.com/Zainul342/cinevault.git
 cd cinevault
 ```
 
-### 2. DEPENDENCY INJECTION
+### 2. INJECT DEPS
+fetch the vendor packages.
 ```bash
 composer install --no-dev --optimize-autoloader
 ```
 
-### 3. ENVIRONMENT CONFIGURATION
+### 3. CONFIG
+duplicate the env example. fill in the secrets.
 ```bash
 cp .env.example .env
-# Edit .env and populate DB_ credentials and TMDB_API_KEY
 ```
 
-### 4. DATABASE INITIALIZATION
-Import the provided schema into your MySQL instance:
+### 4. DB INIT
+dump the schema into your mysql instance.
 ```bash
 mysql -u root -p cinevault < database/schema.sql
 ```
 
-### 5. EXECUTE RUNTIME
+### 5. EXECUTE
+spin up the built-in server.
 ```bash
 php -S localhost:8080 -t public
 ```
 
-## > DEPLOYMENT PIPELINE (RAILWAY)
+## > DEPLOY (RAILWAY)
 
-This repository is configured for automated deployment via Railway.
+automated pipeline via dockerfile.
+base image is **php:8.3-cli**.
+extensions wired up: `pdo_mysql` `zip` `pcntl`.
 
-**Configuration Strategy:**
-- **Build Method**: Dockerfile (PHP 8.3 + PDO MySQL extension)
-- **Environment**: Linux/Debian Bookworm
-- **Process Manager**: PHP Built-in Server (Production Mode)
+ensure these vars are set in your project settings
+`DB_HOST` `DB_PORT` `DB_DATABASE` `DB_USERNAME` `DB_PASSWORD` `TMDB_API_KEY`
 
-**Required Environment Variables:**
-| KEY               | DESCRIPTION                     |
-|-------------------|---------------------------------|
-| DB_HOST           | Database endpoint               |
-| DB_PORT           | Database port (default: 3306)   |
-| DB_DATABASE       | Database name                   |
-| DB_USERNAME       | Database user                   |
-| DB_PASSWORD       | Database password               |
-| TMDB_API_KEY      | v3 API Key from TheMovieDB      |
-| APP_DEBUG         | Boolean (false for production)  |
+## > ENDPOINTS
 
-## > API INTERFACE REFERENCE
+REST interface for the frontend consumption.
 
-RESTful endpoints for data consumption.
-
-### AUTH
-- `POST /api/auth/register` - Create new operator identity
-- `POST /api/auth/login`    - Obtain JWT access token
-- `GET  /api/auth/me`       - Validate session context
-
-### MOVIES
-- `GET  /api/movies`       - Retrieve library index (Paginated)
-- `POST /api/movies/sync`  - Synchronize remote entity to local storage
-
-### INTERACTIONS
-- `POST /api/watchlist/{id}` - Toggle watchlist status
-- `POST /api/movies/{id}/like` - Toggle validation status
+`POST /api/auth/register` creates new user identity
+`POST /api/auth/login` gets you the jwt access token
+`GET  /api/movies` pulls the library index
+`POST /api/movies/sync` pulls data from remote and saves locally
 
 ---
-[ SYSTEM STATUS: ONLINE ]
-[ COPYRIGHT (C) 2026 CINEVAULT SYSTEMS ]
+[ SYSTEM ONLINE ]
+[ CODE IS LAW ]
