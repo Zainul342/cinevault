@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineVault</title>
+
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .filters-bar {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .filter-select {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            background: var(--bg-card);
+            cursor: pointer;
+        }
+
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--spacing-xl);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-wrapper"></div>
+
+    <!-- Core -->
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/core/state.js"></script>
+    <script src="assets/js/core/auth.js"></script>
+    <script src="assets/js/core/router.js"></script>
+
+    <!-- Components -->
+    <script src="assets/js/MovieCard.js"></script>
+    <script src="assets/js/SearchBar.js"></script>
+    <script src="assets/js/Modal.js"></script>
+    <script src="assets/js/Toast.js"></script>
+    <script src="assets/js/components/Sidebar.js"></script>
+    <script src="assets/js/components/Header.js"></script>
+
+    <!-- Pages -->
+    <script src="assets/js/pages/Dashboard.js"></script>
+    <script src="assets/js/pages/Movies.js"></script>
+    <script src="assets/js/pages/Watchlist.js"></script>
+    <script src="assets/js/pages/Analytics.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
