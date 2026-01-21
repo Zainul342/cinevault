@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["php", "php83Packages.composer"]
+nixPkgs = ["php83", "php83Packages.composer", "php83Extensions.pdo_mysql", "php83Extensions.curl"]
 
 [phases.install]
 cmds = ["composer install --no-dev --optimize-autoloader"]
