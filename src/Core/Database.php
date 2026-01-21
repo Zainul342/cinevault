@@ -46,6 +46,11 @@ final class Database
         return $this->pdo;
     }
 
+    public function getConnection(): PDO
+    {
+        return $this->pdo;
+    }
+
     /**
      * @param array<string, mixed> $params
      */
