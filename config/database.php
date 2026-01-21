@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-// Helper function untuk baca env dengan fallback ke getenv()
-function env(string $key, mixed $default = null): mixed
-{
-    return $_ENV[$key] ?? getenv($key) ?: $default;
-}
+// env() function is defined in bootstrap.php
 
 return [
     'driver' => env('DB_DRIVER', 'mysql'),
