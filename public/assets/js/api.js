@@ -100,7 +100,28 @@ const API = (() => {
         details: (id) => get(`/tmdb/movie/${id}`),
     };
 
-    return { get, post, put, del, auth, movies, tmdb, getToken, setToken, clearToken };
+    // Watchlist endpoints
+    const watchlist = {
+        list: () => get('/watchlist'),
+        add: (movieId) => post(`/watchlist/${movieId}`),
+        remove: (movieId) => del(`/watchlist/${movieId}`),
+    };
+
+    // User interactions
+    const interactions = {
+        like: (movieId) => post(`/movies/${movieId}/like`),
+        history: (movieId) => post(`/movies/${movieId}/history`),
+        status: (movieId) => get(`/interactions/status/${movieId}`),
+    };
+
+    // Recommendations
+    const recommendations = (limit = 12) => get('/recommendations', { limit });
+
+    return {
+        get, post, put, del,
+        auth, movies, tmdb, watchlist, interactions, recommendations,
+        getToken, setToken, clearToken
+    };
 })();
 
 // Export for modules

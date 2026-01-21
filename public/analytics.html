@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - CineVault</title>
+
+    <link rel="stylesheet" href="assets/css/design-system.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-hard);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-hard);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .chart-title {
+            margin-bottom: var(--spacing-md);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>CINEVAULT</h1>
+            </div>
+            <nav class="nav-menu">
+                <a class="nav-item" href="dashboard.html" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a class="nav-item" href="movies.html" data-page="movies">
+                    <i class="fas fa-film"></i>
+                    <span class="nav-text">Movies</span>
+                </a>
+                <a class="nav-item" data-page="watchlist">
+                    <i class="fas fa-heart"></i>
+                    <span class="nav-text">Watchlist</span>
+                </a>
+                <a class="nav-item active" data-page="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="nav-text">Analytics</span>
+                </a>
+                <div style="flex:1"></div>
+                <a class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 style="font-family: var(--font-heading);"><i class="fas fa-chart-line text-primary"></i> Analytics
+                </h2>
+                <div class="user-profile">
+                    <div class="avatar"></div>
+                    <span style="font-weight: 600;">Admin</span>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-movies">-</div>
+                    <div class="stat-label">Total Movies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-views">-</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-users">-</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-searches">-</div>
+                    <div class="stat-label">Searches Today</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-container">
+                <h3 class="chart-title"><i class="fas fa-eye text-accent"></i> Views This Week</h3>
+                <canvas id="views-chart" height="100"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title"><i class="fas fa-star text-primary"></i> Top Rated Movies</h3>
+                <canvas id="ratings-chart" height="100"></canvas>
+            </div>
+        </main>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/Toast.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Mock data for demo (replace with actual API calls)
+            const mockStats = {
+                movies: 42,
+                views: 1234,
+                users: 89,
+                searches: 156
+            };
+
+            // Update stats
+            document.getElementById('stat-movies').textContent = mockStats.movies;
+            document.getElementById('stat-views').textContent = mockStats.views;
+            document.getElementById('stat-users').textContent = mockStats.users;
+            document.getElementById('stat-searches').textContent = mockStats.searches;
+
+            // Views Chart
+            new Chart(document.getElementById('views-chart'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Views',
+                        data: [120, 190, 300, 250, 420, 380, 450],
+                        borderColor: '#00E3B5',
+                        backgroundColor: 'rgba(0, 227, 181, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Ratings Chart
+            new Chart(document.getElementById('ratings-chart'), {
+                type: 'bar',
+                data: {
+                    labels: ['The Godfather', 'Shawshank', 'Dark Knight', 'Pulp Fiction', 'Fight Club'],
+                    datasets: [{
+                        label: 'Rating',
+                        data: [9.2, 9.3, 9.0, 8.9, 8.8],
+                        backgroundColor: [
+                            '#F9C62C',
+                            '#00E3B5',
+                            '#5FDBFD',
+                            '#80EED3',
+                            '#F4EBA7'
+                        ],
+                        borderColor: '#131313',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 8,
+                            max: 10
+                        }
+                    }
+                }
+            });
+
+            Toast.info('Analytics loaded');
+        });
+    </script>
+</body>
+
+</html>

@@ -214,13 +214,60 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Movie action events (watchlist, like)
     document.addEventListener('movie:action', async (e) => {
         const { action, movie } = e.detail;
+        const movieId = movie.id || movie.tmdb_id;
 
         if (!API.auth.isLoggedIn()) {
             Toast.warning('Please login to use this feature');
             return;
         }
 
-        Toast.info(`${action} action for: ${movie.title}`);
-        // TODO: Implement actual watchlist/like API calls
+        // Find the button that triggered this action for UI feedback
+        const btn = document.querySelector(`[data-action="${action}"][data-movie-id="${movieId}"]`);
+
+        try {
+            if (action === 'watchlist') {
+                // Optimistic UI
+                btn?.classList.toggle('active');
+                btn?.classList.add('animating');
+
+                const inWatchlist = btn?.classList.contains('active');
+
+                if (inWatchlist) {
+                    // Need to sync movie first if it's from TMDB
+                    if (!movie.id && movie.tmdb_id) {
+                        await API.movies.sync(movie.tmdb_id);
+                    }
+                    await API.watchlist.add(movieId);
+                    Toast.success(`"${movie.title}" added to watchlist`);
+                } else {
+                    await API.watchlist.remove(movieId);
+                    Toast.success(`"${movie.title}" removed from watchlist`);
+                }
+
+            } else if (action === 'like') {
+                // Optimistic UI with heart animation
+                btn?.classList.toggle('active');
+                btn?.classList.add('animating');
+
+                // Sync movie if from TMDB
+                if (!movie.id && movie.tmdb_id) {
+                    await API.movies.sync(movie.tmdb_id);
+                }
+
+                const res = await API.interactions.like(movieId);
+                Toast.success(res.liked ? 'Movie liked!' : 'Like removed');
+
+                // Sync final state from server
+                if (res.liked !== btn?.classList.contains('active')) {
+                    btn?.classList.toggle('active');
+                }
+            }
+        } catch (err) {
+            // Revert optimistic UI on error
+            btn?.classList.remove('active', 'animating');
+            Toast.error(err.message || 'Action failed');
+        } finally {
+            setTimeout(() => btn?.classList.remove('animating'), 300);
+        }
     });
 });

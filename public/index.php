@@ -54,6 +54,17 @@ $app->router->get('/api/tmdb/movie/{id}', [new TmdbController(), 'details'], [Au
 $app->router->post('/api/movies/sync', [new TmdbController(), 'sync'], [AuthMiddleware::class]);
 $app->router->post('/api/movies/sync-batch', [new TmdbController(), 'syncBatch'], [AuthMiddleware::class]);
 
+// Interaction Routes (Auth required)
+use App\Controller\InteractionController;
+
+$app->router->get('/api/watchlist', [new InteractionController(), 'listWatchlist'], [AuthMiddleware::class]);
+$app->router->post('/api/watchlist/{movieId}', [new InteractionController(), 'addToWatchlist'], [AuthMiddleware::class]);
+$app->router->delete('/api/watchlist/{movieId}', [new InteractionController(), 'removeFromWatchlist'], [AuthMiddleware::class]);
+$app->router->post('/api/movies/{id}/like', [new InteractionController(), 'toggleLike'], [AuthMiddleware::class]);
+$app->router->post('/api/movies/{id}/history', [new InteractionController(), 'trackHistory'], [AuthMiddleware::class]);
+$app->router->get('/api/recommendations', [new InteractionController(), 'getRecommendations'], [AuthMiddleware::class]);
+$app->router->get('/api/interactions/status/{movieId}', [new InteractionController(), 'getStatus'], [AuthMiddleware::class]);
+
 
 // Dispatch - let the router handle the request
 $app->run();

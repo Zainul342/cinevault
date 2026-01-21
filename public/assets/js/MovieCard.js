@@ -42,10 +42,10 @@ const MovieCard = (() => {
                 </div>
                 ${showActions ? `
                     <div class="card-actions">
-                        <button class="btn-icon" data-action="watchlist" title="Add to Watchlist">
-                            <i class="fas fa-plus"></i>
+                        <button class="btn-icon btn-watchlist" data-action="watchlist" data-movie-id="${movie.id || movie.tmdb_id}" title="Add to Watchlist" aria-label="Add to Watchlist">
+                            <i class="fas fa-bookmark"></i>
                         </button>
-                        <button class="btn-icon" data-action="like" title="Like">
+                        <button class="btn-icon btn-like" data-action="like" data-movie-id="${movie.id || movie.tmdb_id}" title="Like" aria-label="Like movie">
                             <i class="fas fa-heart"></i>
                         </button>
                     </div>

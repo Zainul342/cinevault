@@ -66,6 +66,18 @@ final class Database
     }
 
     /**
+     * Fetch all with positional (?) parameters instead of named (:name)
+     * @param array<int, mixed> $params
+     * @return array<int, array<string, mixed>>
+     */
+    public function fetchAllPositional(string $sql, array $params = []): array
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    /**
      * @param array<string, mixed> $params
      * @return array<string, mixed>|null
      */
