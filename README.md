@@ -1,53 +1,99 @@
-# 🎬 CineVault
+```text
+   ______ _             _    __            _ __ 
+  / ____/(_)___  ___   | |  / /___ ___  __/ / /_
+ / /    / / __ \/ _ \  | | / / __ `/ / / / / __/
+/ /___ / / / / /  __/  | |/ / /_/ / /_/ / / /_  
+\____//_/_/ /_/\___/   |___/\__,_/\__,_/_/\__/  
 
-Yo, welcome to **CineVault**. 
+[ v1.0.0 - PRODUCTION BUILD ]
+```
 
-This ain't your grandma's streaming dashboard. We're building a sleek, high-performance backend for a premium movie streaming platform. No bloated frameworks, no magic hidden behind a thousand abstractions. Just pure, raw PHP muscle. 💪
+# SYSTEM ARCHITECTURE
 
-## 🚀 What's Cookin'?
+CineVault is a high-performance, framework-agnostic MVC application engineered for movie data aggregation and user library management. Built on bare-metal PHP 8.3 principles without the overhead of heavy-duty frameworks.
 
-We're crafting a custom MVC framework from scratch because we like control. Current status? **Phase 1** is done and dusted. The core engine is purring.
+## > TECHNICAL SPECIFICATIONS
 
-### The Stack (So Far)
-- **PHP 8.1+**: Keeping it modern, strict types or bust.
-- **Custom Core**: We built our own Router, App container, and Request/Response handlers. 
-- **Database**: efficient PDO wrapper with transaction support.
-- **Middleware**: Custom pipeline for things like CORS, Rate Limiting, and Role checks.
+### [ BACKEND KERNEL ]
+- **Runtime**: PHP 8.3 (Strict Types)
+- **Architecture**: Custom MVC (Model-View-Controller) implementation
+- **Database**: MySQL 8.0 via PDO (Strict Error Mode)
+- **External API**: TMDB (The Movie Database) Integration v3
+- **Network**: GuzzleHttp for synchronous/asynchronous data transport
 
-## 🛠️ Getting Started
+### [ FRONTEND INTERFACE ]
+- **Language**: ECMAScript 2023 (Vanilla JS)
+- **State Management**: Local Proxy Store
+- **Styling**: Native CSS3 (CSS Variables, Flexbox/Grid)
+- **DOM Manipulation**: Direct native selection, no Virtual DOM overhead
 
-Wanna spin this up? Easy peasy.
+## > INSTALLATION PROTOCOL
 
-1. **Grab the goods:**
-   ```bash
-   git clone https://github.com/Zainul342/cinevault.git
-   cd cinevault
-   ```
+### 1. CLONE REPOSITORY
+```bash
+git clone https://github.com/Zainul342/cinevault.git
+cd cinevault
+```
 
-2. **Load dependencies:**
-   (Yeah, we use Composer, we're not savages)
-   ```bash
-   composer install
-   ```
+### 2. DEPENDENCY INJECTION
+```bash
+composer install --no-dev --optimize-autoloader
+```
 
-3. **Config setup:**
-   Copy that env example and tweak it if you have to.
-   ```bash
-   cp .env.example .env
-   ```
+### 3. ENVIRONMENT CONFIGURATION
+```bash
+cp .env.example .env
+# Edit .env and populate DB_ credentials and TMDB_API_KEY
+```
 
-4. **Fire it up:**
-   Since we don't have a fancy Nginx setup just yet, the built-in server works fine for dev:
-   ```bash
-   php -S localhost:8080 -t public
-   ```
+### 4. DATABASE INITIALIZATION
+Import the provided schema into your MySQL instance:
+```bash
+mysql -u root -p cinevault < database/schema.sql
+```
 
-   Hit up `http://localhost:8080` and verify the engine is running. 🟢
+### 5. EXECUTE RUNTIME
+```bash
+php -S localhost:8080 -t public
+```
 
-## 🔜 What's Next?
-We just laid the foundation. **Phase 2** is where it gets real:
-- JWT Authentication (Locking it down) 🔒
-- User Roles (Who's the boss?)
-- Actual movie data fetching
+## > DEPLOYMENT PIPELINE (RAILWAY)
 
-Stay tuned, we're just getting started. 🍿
+This repository is configured for automated deployment via Railway.
+
+**Configuration Strategy:**
+- **Build Method**: Dockerfile (PHP 8.3 + PDO MySQL extension)
+- **Environment**: Linux/Debian Bookworm
+- **Process Manager**: PHP Built-in Server (Production Mode)
+
+**Required Environment Variables:**
+| KEY               | DESCRIPTION                     |
+|-------------------|---------------------------------|
+| DB_HOST           | Database endpoint               |
+| DB_PORT           | Database port (default: 3306)   |
+| DB_DATABASE       | Database name                   |
+| DB_USERNAME       | Database user                   |
+| DB_PASSWORD       | Database password               |
+| TMDB_API_KEY      | v3 API Key from TheMovieDB      |
+| APP_DEBUG         | Boolean (false for production)  |
+
+## > API INTERFACE REFERENCE
+
+RESTful endpoints for data consumption.
+
+### AUTH
+- `POST /api/auth/register` - Create new operator identity
+- `POST /api/auth/login`    - Obtain JWT access token
+- `GET  /api/auth/me`       - Validate session context
+
+### MOVIES
+- `GET  /api/movies`       - Retrieve library index (Paginated)
+- `POST /api/movies/sync`  - Synchronize remote entity to local storage
+
+### INTERACTIONS
+- `POST /api/watchlist/{id}` - Toggle watchlist status
+- `POST /api/movies/{id}/like` - Toggle validation status
+
+---
+[ SYSTEM STATUS: ONLINE ]
+[ COPYRIGHT (C) 2026 CINEVAULT SYSTEMS ]
