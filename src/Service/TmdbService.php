@@ -14,8 +14,8 @@ final class TmdbService
     
     public function __construct()
     {
-        $this->apiKey = $_ENV['TMDB_API_KEY'] ?? throw new \RuntimeException('TMDB_API_KEY not set');
-        $baseUrl = $_ENV['TMDB_BASE_URL'] ?? 'https://api.themoviedb.org/3';
+        $this->apiKey = $_ENV['TMDB_API_KEY'] ?? getenv('TMDB_API_KEY') ?: throw new \RuntimeException('TMDB_API_KEY not set');
+        $baseUrl = $_ENV['TMDB_BASE_URL'] ?? getenv('TMDB_BASE_URL') ?: 'https://api.themoviedb.org/3';
         
         $this->client = new Client([
             'base_uri' => $baseUrl,
