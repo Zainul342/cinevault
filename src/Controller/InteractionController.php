@@ -29,7 +29,7 @@ final class InteractionController
      */
     public function listWatchlist(Request $req): array
     {
-        $userId = $req->user['id'];
+        $userId = $req->getAttribute('user_id');
         $items = $this->repo->getWatchlist($userId);
         
         return [
@@ -43,8 +43,8 @@ final class InteractionController
      */
     public function addToWatchlist(Request $req): array
     {
-        $userId = $req->user['id'];
-        $movieId = (int) $req->params['movieId'];
+        $userId = $req->getAttribute('user_id');
+        $movieId = (int) $req->param('movieId');
 
         $movie = $this->movies->findById($movieId);
         if (!$movie) {
@@ -67,8 +67,8 @@ final class InteractionController
      */
     public function removeFromWatchlist(Request $req): array
     {
-        $userId = $req->user['id'];
-        $movieId = (int) $req->params['movieId'];
+        $userId = $req->getAttribute('user_id');
+        $movieId = (int) $req->param('movieId');
 
         $removed = $this->repo->remove($userId, $movieId, 'watchlist');
         
@@ -88,8 +88,8 @@ final class InteractionController
      */
     public function toggleLike(Request $req): array
     {
-        $userId = $req->user['id'];
-        $movieId = (int) $req->params['id'];
+        $userId = $req->getAttribute('user_id');
+        $movieId = (int) $req->param('id');
 
         $movie = $this->movies->findById($movieId);
         if (!$movie) {
@@ -112,8 +112,8 @@ final class InteractionController
      */
     public function trackHistory(Request $req): array
     {
-        $userId = $req->user['id'];
-        $movieId = (int) $req->params['id'];
+        $userId = $req->getAttribute('user_id');
+        $movieId = (int) $req->param('id');
 
         // History can have duplicates over time, just add
         $this->repo->add($userId, $movieId, 'history');
@@ -127,8 +127,8 @@ final class InteractionController
      */
     public function getRecommendations(Request $req): array
     {
-        $userId = $req->user['id'];
-        $limit = min((int)($req->query['limit'] ?? 12), 24);
+        $userId = $req->getAttribute('user_id');
+        $limit = min((int)($req->input('limit', 12)), 24);
 
         $service = new RecommendationService();
         $recommendations = $service->getRecommendations($userId, $limit);
@@ -147,8 +147,8 @@ final class InteractionController
      */
     public function getStatus(Request $req): array
     {
-        $userId = $req->user['id'];
-        $movieId = (int) $req->params['movieId'];
+        $userId = $req->getAttribute('user_id');
+        $movieId = (int) $req->param('movieId');
 
         return [
             'movie_id' => $movieId,
